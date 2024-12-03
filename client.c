@@ -16,7 +16,11 @@ int main(int argc,char** argv){
     {
         port_client=atoi(argv[1]);
     }
-    
+
+    printf("Quel document voulez vous transférer ?\n");
+    char reponse[255];memset(reponse,0,255);
+    fgets(reponse,255,stdin);
+    reponse[strlen(reponse)-1]=0;
 
 
     struct sockaddr_in client_addr={
@@ -40,14 +44,16 @@ int main(int argc,char** argv){
     if(check_error==-1)return EXIT_FAILURE;
 
     check_error = connect(client_fd,(struct sockaddr*)&server_addr,sizeof server_addr);perror("connect");
-    FILE * file_fd=fopen("massi.jpeg","rb");
+    FILE * file_fd=fopen(reponse,"rb");
     fseek(file_fd,0,SEEK_END);
     int size_fd = ftell(file_fd);
     fseek(file_fd,0,SEEK_SET);
     char image[size_fd];
     fread(image,size_fd,1,file_fd);
+    fclose(file_fd);
     char size_fd_char[BUFSIZ];memset(size_fd_char,0,BUFSIZ);
     sprintf(size_fd_char,"%d",size_fd);
+    printf("size_fd : %d, char image : %ld, size_fd_char %s\n",size_fd,sizeof image,size_fd_char);
 
     send(client_fd,size_fd_char,strlen(size_fd_char),0);
     

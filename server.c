@@ -9,12 +9,11 @@
 #include <netinet/tcp.h>
 #include <pthread.h>
 #include "global.h"
+#define TEST 10
 
-// void* recv_server(){
-
-// }
 
 int main(){
+
 
     struct sockaddr_in server_addr={
         .sin_addr.s_addr=INADDR_ANY,
@@ -45,19 +44,14 @@ int main(){
     check_error=recv(client_fd,reponse,sizeof reponse,0);perror("fist recv");
     if(client_fd==-1)return EXIT_FAILURE;
     int file_size=atoi(reponse);
-    printf("sizeeeeeeeee %d\n",file_size);
+    printf("taille du prmeier envoi : %d\n",file_size);
+
     char final_file[file_size];
-    check_error=recv(client_fd,final_file,file_size,0);perror("second recv");
-    printf("%d\n",check_error);
+    int taille_second_recv=recv(client_fd,final_file,4745,0);perror("second recv");
+    printf("%d\n",taille_second_recv);
     if(client_fd==-1)return EXIT_FAILURE;
 
-    FILE * fd=fopen("image_massi.jpeg","wb+");
-    fwrite(final_file,1,check_error,fd);
+    FILE * fd=fopen("image.jpeg","wb+");
+    fwrite(final_file,1,4745,fd);
     fclose(fd);
-
-
-
-
-    
-
 }
