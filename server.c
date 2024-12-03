@@ -54,4 +54,5 @@ int main(){
     FILE * fd=fopen("image.jpeg","wb+");
     fwrite(final_file,1,4745,fd);
     fclose(fd);
+
 }
