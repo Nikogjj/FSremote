@@ -66,19 +66,33 @@ int main(){
     /**
      * Reception du fichier
      */
-    char* final_file = malloc(file_size);
-    int taille_second_recv=recv(client_fd,final_file,file_size,0);perror("recv() - recpetion du fichier à uploader");
-    printf("taile 1st recv : %d\n",taille_second_recv);
+        int taille_second_recv=1;
+        int final_file_size=0;
+        char* final_file = malloc(file_size);
+        int i=0;
+        char rangement_buf[10][file_size];
+    while (taille_second_recv!=0)
+    {
+        taille_second_recv=recv(client_fd,rangement_buf[i][file_size],file_size,0);perror("recv() - recpetion du fichier à uploader");
+        printf("taile %dst recv : %d\n",i,taille_second_recv);
+        // final_file_size += taille_second_recv;
+        i++;
+    }
+    printf("taille du tab final_file apres la boucle for %ld\n",strlen(rangement_buf[0]));
+    printf("taille du tab final_file apres la boucle for %ld\n",strlen(rangement_buf[1]));
+    for (int j = 0; j < i; j++)
+    {
+        strcat(final_file,rangement_buf[i]);
+    }
+    printf("taille du tab final_file apres la boucle for %ld\n",strlen(final_file));
+    
 
-    taille_second_recv=recv(client_fd,final_file,file_size,0);perror("recv() - recpetion du fichier à uploader");
-    printf("taile 2nd recv : %d\n",taille_second_recv);
-    return 0;
-
-    printf("taille second recv() %d\n",taille_second_recv);
-    if(taille_second_recv==-1 || taille_second_recv == 0)return EXIT_FAILURE;
+    // if(taille_second_recv==-1 || taille_second_recv == 0)return EXIT_FAILURE;
 
     FILE * uploaded_file_fd=fopen("image.jpg","wb+");perror("fopen()");
+
     fwrite(final_file,1,file_size,uploaded_file_fd);perror("fwrite()");
+
     
     fclose(uploaded_file_fd);perror("fclose()");
     free(final_file);
