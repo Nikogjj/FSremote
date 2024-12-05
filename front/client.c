@@ -71,20 +71,22 @@ int main(int argc,char** argv){
     // Get file length
     fseek(file_fd,0,SEEK_END);
     int size_fd = ftell(file_fd);
+    char size_fd_buf[10];memset(size_fd_buf,0,10);
+    sprintf(size_fd_buf,"%d",size_fd);
 
     // Replace cursor fd to the start of the file
     fseek(file_fd,0,SEEK_SET);
 
     // Read image to image array
     char image[size_fd];memset(image,0,size_fd);
-    fread(image,1,size_fd,file_fd);
+    fread(image,size_fd,1,file_fd);
     fclose(file_fd);
 
 
     char size_fd_char[BUFSIZ];memset(size_fd_char,0,BUFSIZ);
     sprintf(size_fd_char,"%d",size_fd);
     printf("size_fd : %d, char image : %ld, size_fd_char %s\n",size_fd,sizeof image,size_fd_char);
-
+    send(client_fd,size_fd_buf,strlen(size_fd_buf),0);
     // Send file size
     send(client_fd,size_fd_char,strlen(size_fd_char),0);
 
